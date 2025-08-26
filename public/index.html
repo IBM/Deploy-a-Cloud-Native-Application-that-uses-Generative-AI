@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JK Insurance - Auto Insurance Quote</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        code {
+            white-space: pre-line;
+        }
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        .form-section h2 {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        .progress-container {
+            margin: 20px 0;
+        }
+        .progress {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #3b82f6;
+            transition: width 0.6s ease;
+        }
+        .steps-tracker {
+            margin: 20px 0;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .step-icon {
+            margin-right: 10px;
+            width: 24px;
+            text-align: center;
+        }
+        [x-cloak] { 
+            display: none !important; 
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center">
+            <div class="flex-shrink-0">
+                <svg class="h-10 w-10 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L1 21h22L12 2zm0 4.5l6.5 11.5h-13L12 6.5z"/>
+                </svg>
+            </div>
+            <h1 class="ml-3 text-2xl font-bold text-gray-900">JK Home-Auto-Life</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div x-data="mainApp">
+                <!-- Application Form -->
+                <div x-show="page === 'form'">
+                    <h1 class="text-2xl font-bold text-center mb-6">Save Up To 47% On Auto Insurance*</h1>
+                    
+                    <form id="insuranceForm" class="space-y-6" x-on:submit.prevent="submitForm">
+                        <!-- Personal Information Section -->
+                        <div class="form-section bg-white rounded-lg shadow p-6 mb-6">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-4">Personal Information</h2>
+                            <div class="grid grid-cols-1 gap-4">
+                                <div class="input-group">
+                                    <label for="firstName" class="block text-sm font-medium text-gray-700">First Name*</label>
+                                    <input type="text" id="firstName" name="firstName" placeholder="John" required 
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div class="input-group">
+                                    <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name*</label>
+                                    <input type="text" id="lastName" name="lastName" placeholder="Smith" required 
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div class="input-group">
+                                    <label for="dob" class="block text-sm font-medium text-gray-700">Date of Birth*</label>
+                                    <input type="date" id="dob" name="dob" placeholder="MM/DD/YYYY" required 
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div class="input-group">
+                                    <label for="address" class="block text-sm font-medium text-gray-700">Street Address*</label>
+                                    <input type="text" id="address" name="address" placeholder="123 Main Street" required 
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div class="input-group">
+                                    <label for="city" class="block text-sm font-medium text-gray-700">City*</label>
+                                    <input type="text" id="city" name="city" placeholder="San Francisco" required 
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div class="input-group">
+                                    <label for="state" class="block text-sm font-medium text-gray-700">State*</label>
+                                    <select id="state" name="state" required 
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <option value="">Select State</option>
+                                        <option value="AL">Alabama</option>
+                                        <option value="AK">Alaska</option>
+                                        <option value="AZ">Arizona</option>
+                                        <option value="AR">Arkansas</option>
+                                        <option value="CA">California</option>
+                                        <option value="CO">Colorado</option>
+                                        <option value="CT">Connecticut</option>
+                                        <option value="DE">Delaware</option>
+                                        <option value="FL">Florida</option>
+                                        <option value="GA">Georgia</option>
+                                        <option value="HI">Hawaii</option>
+                                        <option value="ID">Idaho</option>
+                                        <option value="IL">Illinois</option>
+                                        <option value="IN">Indiana</option>
+                                        <option value="IA">Iowa</option>
+                                        <option value="KS">Kansas</option>
+                                        <option value="KY">Kentucky</option>
+                                        <option value="LA">Louisiana</option>
+                                        <option value="ME">Maine</option>
+                                        <option value="MD">Maryland</option>
+                                        <option value="MA">Massachusetts</option>
+                                        <option value="MI">Michigan</option>
+                                        <option value="MN">Minnesota</option>
+                                        <option value="MS">Mississippi</option>
+                                        <option value="MO">Missouri</option>
+                                        <option value="MT">Montana</option>
+                                        <option value="NE">Nebraska</option>
+                                        <option value="NV">Nevada</option>
+                                        <option value="NH">New Hampshire</option>
+                                        <option value="NJ">New Jersey</option>
+                                        <option value="NM">New Mexico</option>
+                                        <option value="NY">New York</option>
+                                        <option value="NC">North Carolina</option>
+                                        <option value="ND">North Dakota</option>
+                                        <option value="OH">Ohio</option>
+                                        <option value="OK">Oklahoma</option>
+                                        <option value="OR">Oregon</option>
+                                        <option value="PA">Pennsylvania</option>
+                                        <option value="RI">Rhode Island</option>
+                                        <option value="SC">South Carolina</option>
+                                        <option value="SD">South Dakota</option>
+                                        <option value="TN">Tennessee</option>
+                                        <option value="TX">Texas</option>
+                                        <option value="UT">Utah</option>
+                                        <option value="VT">Vermont</option>
+                                        <option value="VA">Virginia</option>
+                                        <option value="WA">Washington</option>
+                                        <option value="WV">West Virginia</option>
+                                        <option value="WI">Wisconsin</option>
+                                        <option value="WY">Wyoming</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label for="zipcode" class="block text-sm font-medium text-gray-700">Zipcode*</label>
+                                    <input type="text" id="zipcode" name="zipcode" placeholder="94105" pattern="[0-9]{5}" required 
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- License and Driving Information Section -->
+                        <div class="form-section bg-white rounded-lg shadow p-6 mb-6">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-4">License and Vehicle Information</h2>
+                            <div class="grid grid-cols-1 gap-4">
+                                <div class="input-group">
+                                    <label for="licenseState" class="block text-sm font-medium text-gray-700">License Issuing State*</label>
+                                    <select id="state" name="state" required 
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <option value="">Select State</option>
+                                        <option value="AL">Alabama</option>
+                                        <option value="AK">Alaska</option>
+                                        <option value="AZ">Arizona</option>
+                                        <option value="AR">Arkansas</option>
+                                        <option value="CA">California</option>
+                                        <option value="CO">Colorado</option>
+                                        <option value="CT">Connecticut</option>
+                                        <option value="DE">Delaware</option>
+                                        <option value="FL">Florida</option>
+                                        <option value="GA">Georgia</option>
+                                        <option value="HI">Hawaii</option>
+                                        <option value="ID">Idaho</option>
+                                        <option value="IL">Illinois</option>
+                                        <option value="IN">Indiana</option>
+                                        <option value="IA">Iowa</option>
+                                        <option value="KS">Kansas</option>
+                                        <option value="KY">Kentucky</option>
+                                        <option value="LA">Louisiana</option>
+                                        <option value="ME">Maine</option>
+                                        <option value="MD">Maryland</option>
+                                        <option value="MA">Massachusetts</option>
+                                        <option value="MI">Michigan</option>
+                                        <option value="MN">Minnesota</option>
+                                        <option value="MS">Mississippi</option>
+                                        <option value="MO">Missouri</option>
+                                        <option value="MT">Montana</option>
+                                        <option value="NE">Nebraska</option>
+                                        <option value="NV">Nevada</option>
+                                        <option value="NH">New Hampshire</option>
+                                        <option value="NJ">New Jersey</option>
+                                        <option value="NM">New Mexico</option>
+                                        <option value="NY">New York</option>
+                                        <option value="NC">North Carolina</option>
+                                        <option value="ND">North Dakota</option>
+                                        <option value="OH">Ohio</option>
+                                        <option value="OK">Oklahoma</option>
+                                        <option value="OR">Oregon</option>
+                                        <option value="PA">Pennsylvania</option>
+                                        <option value="RI">Rhode Island</option>
+                                        <option value="SC">South Carolina</option>
+                                        <option value="SD">South Dakota</option>
+                                        <option value="TN">Tennessee</option>
+                                        <option value="TX">Texas</option>
+                                        <option value="UT">Utah</option>
+                                        <option value="VT">Vermont</option>
+                                        <option value="VA">Virginia</option>
+                                        <option value="WA">Washington</option>
+                                        <option value="WV">West Virginia</option>
+                                        <option value="WI">Wisconsin</option>
+                                        <option value="WY">Wyoming</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="driversLicenseImage">Upload a Photo of Your Driver&apos;s License*</label>
+                                    <input type="file" id="carPhoto" name="driversLicenseImage" accept="image/*" required
+                                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg 
+                                        cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none 
+                                        dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" 
+                                        file:bg-blue-50 file:text-blue-700
+                                        hover:file:bg-blue-100">
+                                    <p class="mt-1 text-sm text-gray-500">Please upload a clear photo of your driver&apos;s license</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Information Section -->
+                        <div class="form-section bg-white rounded-lg shadow p-6 mb-6">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-4">Additional Information</h2>
+                            <div class="grid grid-cols-1 gap-4">
+                                <div class="input-group">
+                                    <label for="creditScore" class="block text-sm font-medium text-gray-700">Estimated Credit Score*</label>
+                                    <select id="creditScore" name="creditScore" required 
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <option value="">Select Range</option>
+                                        <option value="excellent">Excellent (750+)</option>
+                                        <option value="good">Good (680-749)</option>
+                                        <option value="fair">Fair (600-679)</option>
+                                        <option value="poor">Poor (&lt;600)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex justify-center">
+                            <button type="submit" id="quoteButton" disabled
+                                class="px-6 py-3 bg-gray-400 text-white font-medium rounded-md shadow-sm 
+                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+                                transition-colors duration-200 ease-in-out">
+                                Get Quote
+                            </button>
+                        </div>                    
+                    </form>
+                </div>
+
+                <!-- Progress Tracking View -->
+                <div x-show="page === 'progress'" x-cloak>
+                    <div class="processing-screen bg-white rounded-lg shadow p-6">
+                        <h2 class="text-2xl font-bold text-center mb-4">Your application is being processed</h2>
+                        <p class="text-center mb-2">Application Reference: <strong x-text="applicationId"></strong></p>
+                        <p class="text-center mb-6">We're analyzing your information. This typically takes 1-2 minutes.</p>
+                        
+                        <div class="progress-container">
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" 
+                                    x-bind:style="`width: ${percentComplete}%`" 
+                                    x-bind:aria-valuenow="percentComplete" 
+                                    aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <p class="text-center mt-2 text-gray-600" x-text="`${percentComplete}% complete`"></p>
+                        </div>
+                                           
+                        <div class="steps-tracker max-w-md mx-auto">
+                            <template x-for="(step, index) in steps">
+                                <div class="step">
+                                    <span class="step-icon" x-html="getStepIcon(step.status)"></span>
+                                    <span class="step-text" x-text="step.text"></span>
+                                </div>
+                            </template>
+                        </div>
+                        
+                        <!-- Result display when complete -->
+                        <div x-show="status === 'complete'" x-transition class="result-container mt-8 p-4 bg-green-50 rounded-lg">
+                            <h3 class="text-xl font-bold text-center text-green-800 mb-4">Application Processing Complete!</h3>
+                            <div class="flex justify-center mt-6">
+                                <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700" @click="page='results'">
+                                    View Full Details
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Error display -->
+                        <div x-show="status === 'failed'" x-transition class="error-container mt-8 p-4 bg-red-50 rounded-lg">
+                            <h3 class="text-xl font-bold text-center text-red-800 mb-4">We encountered a problem</h3>
+                            <div x-text="error" class="text-center mb-4"></div>
+                            <div class="flex justify-center">
+                                <button @click="retryApplication()" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                                    Try Again
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div x-show="page === 'results'" x-cloak>
+                    <div class="processing-screen bg-white rounded-lg shadow p-6">
+                        <code x-text="reasoning"></code>
+                    </div>
+                </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col items-center justify-center space-y-4">
+                <div class="flex space-x-6 justify-center">
+                    <a href="#" class="text-gray-300 hover:text-white">Privacy Policy</a>
+                    <a href="#" class="text-gray-300 hover:text-white">Terms of Service</a>
+                    <a href="#" class="text-gray-300 hover:text-white">Contact Us</a>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-gray-400">
+                <p>&copy; 2025 JK Insurance. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        const form = document.getElementById('insuranceForm');
+        const quoteButton = document.getElementById('quoteButton');
+        const inputs = form.querySelectorAll('input, select');
+
+        document.addEventListener('DOMContentLoaded', function() {           
+            // Function to check if all required fields are filled
+            function checkFormValidity() {
+                let isValid = true;
+                inputs.forEach(input => {
+                    if (input.hasAttribute('required') && !input.value) {
+                        isValid = false;
+                    }
+                });
+                
+                // Enable or disable the button
+                if (isValid) {
+                    quoteButton.disabled = false;
+                    quoteButton.classList.remove('bg-gray-400');
+                    quoteButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                } else {
+                    quoteButton.disabled = true;
+                    quoteButton.classList.add('bg-gray-400');
+                    quoteButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                }
+            }
+            
+            // Add event listeners to all inputs
+            inputs.forEach(input => {
+                input.addEventListener('change', checkFormValidity);
+                input.addEventListener('input', checkFormValidity);
+            });
+        });
+
+        document.addEventListener('alpine:init', function() {
+            // Main application logic
+            window.Alpine.data('mainApp', () => ({
+                page: 'form',
+                applicationId: null,
+                
+                submitForm() {
+                    // Create FormData object - this will automatically handle the file upload
+                    const formData = new FormData(form);
+                    
+                    // Send the FormData directly to the server
+                    // Do NOT set Content-Type header - browser will automatically set it with boundary parameter
+                    fetch('/api/submit-application', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.applicationId = data.applicationId;
+                            this.page = 'progress'; // Show progress view
+                            this.startPolling();
+                        } else {
+                            this.form.reset();
+                            checkFormValidity();
+                            alert(data.error || 'Error submitting application');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('There was an error submitting your application. Please try again later.');
+                    });
+                },
+                
+                formIsValid() {
+                    return form.checkValidity();
+                },
+
+                status: 'pending',
+                percentComplete: 0,
+                reasoning: 'NO RHYME OR REASON',
+                error: null,
+                pollingInterval: null,
+                steps: [],
+
+                startPolling() {
+                    this.pollingInterval = setInterval(() => this.checkStatus(), 3000);
+                },
+                
+                stopPolling() {
+                    if (this.pollingInterval) {
+                        clearInterval(this.pollingInterval);
+                    }
+                },
+                
+                checkStatus() {
+                    fetch(`/api/application-status/${this.applicationId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                            if (data.underwritingData) this.reasoning = data.underwritingData.reasoning;
+                            this.percentComplete = data.status.percentComplete;
+                            this.steps = data.status.steps;
+                            
+                            if (data.status.completed) {
+                                this.stopPolling();
+                                this.status = 'complete';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error checking status:', error);
+                        });
+                },
+                
+                getStepIcon(status) {
+                    switch(status) {
+                        case 'pending': return '⏳';
+                        case 'processing': return '🔄';
+                        case 'complete': return '✅';
+                        case 'failed': return '❌';
+                        default: return '⏳';
+                    }
+                },
+                
+                retryApplication() {
+                    // Reset status and restart polling
+                    this.status = 'pending';
+                    this.error = null;
+                    this.percentComplete = 0;
+                    this.steps.forEach(step => step.status = 'pending');
+                    
+                    // In production, call the retry endpoint
+                    // fetch(`/retry-application/${this.applicationId}`, { method: 'POST' })
+                    
+                    // For demo purposes, just restart polling
+                    this.startPolling();
+                }
+
+            }));
+        });
+    </script>
+</body>
+</html>
