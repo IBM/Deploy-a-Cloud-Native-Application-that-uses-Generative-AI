@@ -365,6 +365,11 @@ Click "Save", then "Reload".
 
 Note: This uses ephemeral storage. For persistence, you'll need a PVC mounted to `/app/uploads` to ensure that data is not lost if the pod is deleted. For the purpose of the demo, we will use ephemeral storage. You may need to re-build the Deployment and restart/delete the pod after Reload for changes to take effect.
 
+
 8. Navigate to the "Topology" view in "Developer" and open the URL associated with the Pod.
 
 Or perform: `oc get routes -n cnai` and navigate to the URL that is given. You should now be able to interact with the application.
+
+# Credits
+Dave Tropeano
+Elvin Galarza
