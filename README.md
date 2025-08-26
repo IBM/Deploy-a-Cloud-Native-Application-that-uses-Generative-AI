@@ -342,7 +342,7 @@ Note: Make sure to be in the `cnai` project that you created from earlier. This 
 
 4. Copy/paste the following URL into "Git Repo URL"
 
-!!! Need to add Git URL once it becomes available !!!
+[https://github.com/IBM/Deploy-a-Cloud-Native-Application-that-uses-Generative-AI](https://github.com/IBM/Deploy-a-Cloud-Native-Application-that-uses-Generative-AI)
 
 5. Fill in the environment variables in the Deployment (runtime) configuration that you had finished adding as Secrets in the previous section.
 ![alt text](images/image-8.png)
