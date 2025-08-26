@@ -372,4 +372,5 @@ Or perform: `oc get routes -n cnai` and navigate to the URL that is given. You s
 
 # Credits
 Dave Tropeano
+
 Elvin Galarza
