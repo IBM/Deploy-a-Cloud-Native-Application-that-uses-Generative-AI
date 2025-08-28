@@ -347,7 +347,7 @@ Note: Make sure to be in the `cnai` project that you created from earlier. This 
 ![alt text](<images/image-17.png>)
 
 5. Fill in the environment variables in the Deployment (runtime) configuration that you had finished adding as Secrets in the previous section.
-![alt text](images/image-8.png)
+![alt text](images/image-18.png)
 
 Note: The "Name" should be the same as the screenshot, but the "Value" will differ depending on what options were chosen in Section 5.
 
