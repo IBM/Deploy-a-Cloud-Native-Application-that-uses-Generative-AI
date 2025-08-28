@@ -1,143 +1,59 @@
-const { setTimeout } = require('timers/promises');
-const { Pool } = require('pg');
-const { Application } = require('../../models/application');
-const fs = require('fs');
-const path = require('path');
+const { policyQueue } = require('../config/queues');
+const { updateApplicationStatus } = require('../services/statusManager');
+const policyService = require('../services/llm/policyService');
+const eventBus = require('../services/eventBus');
+const logger = require('../utils/logger');
+const { Application } = require('../models/application');
 
-// Load Postgres credentials from JSON
-const bindingPath = process.env.POSTGRESQL_BINDING || '../../postgresql-credentials.json';
-const pgCreds = JSON.parse(
-  fs.readFileSync(path.join(__dirname, bindingPath), 'utf8')
-);
+// Polling function to wait for the application to appear in MongoDB
+async function waitForApplication(id, maxTries = 40, interval = 500) {
+  for (let i = 0; i < maxTries; i++) {
+    console.log(`Polling for application ${id}... Attempt ${i + 1}/${maxTries}`);
+    console.log(`Waiting for ${interval}ms before next attempt...`);
+    const app = await Application.find(id);
+    if (app) return app;
+    await new Promise(r => setTimeout(r, interval));
+  }
+  throw new Error(`Application not found in MongoDB after polling for id=${id}`);
+}
 
-// Extract connection info
-const pgConn = pgCreds.connection.postgres;
-const pgCert = Buffer.from(pgConn.certificate.certificate_base64, 'base64').toString('utf8');
+// Process policy check jobs
+policyQueue.process(async (job) => {
+  const { applicationId } = job.data;
+  logger.info(`✅ Processing policy check for application ${applicationId}`);
+  
+  try {
+    // Wait for the application to be available in MongoDB
+    await waitForApplication(applicationId);
 
-const { username, password } = pgConn.authentication;
-const { hostname, port } = pgConn.hosts[0];
-const database = pgConn.database;
+    await updateApplicationStatus(applicationId, 'policy', 'processing');
 
-const pool = new Pool({
-  host: hostname,
-  port: port,
-  user: username,
-  password: password,
-  database: database,
-  ssl: {
-    ca: pgCert,
-    rejectUnauthorized: true // or false for dev
+    const policyData = await policyService.run(applicationId);
+    
+    await updateApplicationStatus(applicationId, 'policy', 'complete', { policyData });
+    
+    // Emit event to continue workflow instead of directly calling workflow function
+    eventBus.emit('step:complete', {
+      applicationId,
+      currentState: 'policy',
+      data: policyData
+    });
+    
+    return { success: true, data: policyData };
+  } catch (error) {
+    logger.error(`policy check failed for application ${applicationId}:`, error);
+    
+    // Update application status to failed
+    await updateApplicationStatus(applicationId, 'policy', 'failed');
+    
+    eventBus.emit('step:error', {
+      applicationId,
+      step: 'policy',
+      error: error.message
+    });
+    
+    throw error;
   }
 });
 
-pool.connect()
-  .then(client => {
-    console.log('✅ PostgreSQL connection successful');
-    client.release();
-  })
-  .catch(err => {
-    console.error('❌ PostgreSQL connection failed:', err);
-  });
-
-// Create accounts table if it doesn't exist  
-async function ensureAccountsTable() {
-  const createTableSQL = `
-    CREATE TABLE IF NOT EXISTS accounts (
-      account_id VARCHAR(64) PRIMARY KEY,
-      first_name VARCHAR(100),
-      last_name VARCHAR(100),
-      address VARCHAR(255),
-      city VARCHAR(100),
-      state VARCHAR(50),
-      zipcode VARCHAR(20)
-    );
-  `;
-  await pool.query(createTableSQL);
-}
-
-ensureAccountsTable().then(() => {
-  console.log('✅ Ensured accounts table exists');
-}).catch(console.error);
-
-async function findAccount(fname, lname, address, city, state, zip) {
-    const values = [fname, lname, address, city, state, zip]
-    const q = `
-        SELECT * from accounts WHERE 
-        first_name LIKE $1 AND 
-        last_name LIKE $2 AND 
-        address LIKE $3 AND 
-        city LIKE $4 AND 
-        state LIKE $5 AND 
-        zipcode LIKE $6 
-        LIMIT 10;
-    `
-
-    try {
-        const res = await pool.query(q, values);
-        const rows = await res.rows;
-        return rows; 
-    }
-    catch(error) {
-        console.log(error);
-        return [];
-    }
-}
-
-async function run(applicationId) {
-    let data = { existing: false };
-
-    try {
-        // Fetch the application from MongoDB
-        const app = await Application.find(applicationId);
-        if (!app || !app.userData) {
-            throw new Error('Application or user data not found');
-        }
-
-        // Extract user info (adjust field names as needed)
-        const { firstName, lastName, address, city, state, zipcode } = app.userData;
-
-        // Log the values before insert
-        console.log('Attempting to insert account:', {
-            applicationId,
-            firstName,
-            lastName,
-            address,
-            city,
-            state,
-            zipcode
-        });
-
-        // Call findAccount with real data
-        let res = await findAccount(firstName, lastName, address, city, state, zipcode);
-        if (!res || res.length === 0) {
-            // No match: insert the account
-            try {
-                await pool.query(
-                    `INSERT INTO accounts (account_id, first_name, last_name, address, city, state, zipcode)
-                     VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-                    [
-                        applicationId,
-                        firstName,
-                        lastName,
-                        address,
-                        city,
-                        state,
-                        zipcode
-                    ]
-                );
-                console.log('Account inserted!');
-            } catch (insertErr) {
-                console.error('Failed to insert account:', insertErr);
-            }
-            data.existing = false;
-            return data;
-        }
-        data.existing = true;
-        return data;
-    } catch (err) {
-        console.error('Error in policyService.run:', err);
-        throw err;
-    }
-}
-
-module.exports = { run, pool };
+module.exports = policyQueue;
