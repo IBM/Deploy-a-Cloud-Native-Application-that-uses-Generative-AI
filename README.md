@@ -340,26 +340,32 @@ We'll switch over to the console now and revisit the CLI in the following sectio
 
 Note: Make sure to be in the `cnai` project that you created from earlier. This is crucial as the secrets from the previous section are project-scoped.
 
-4. Copy/paste the following URL into "Git Repo URL"
+4. Copy/paste the following URL into "Git Repo URL": 
 
 [https://github.com/IBM/Deploy-a-Cloud-Native-Application-that-uses-Generative-AI](https://github.com/IBM/Deploy-a-Cloud-Native-Application-that-uses-Generative-AI)
+
+![alt text](<images/image-17.png>)
 
 5. Fill in the environment variables in the Deployment (runtime) configuration that you had finished adding as Secrets in the previous section.
 ![alt text](images/image-8.png)
 
 Note: The "Name" should be the same as the screenshot, but the "Value" will differ depending on what options were chosen in Section 5.
 
-7. Mount `/app/uploads` (where driver's licenses are stored) to a volume, so that licenses that the end user uploads can be stored on the node's storage the pod is associated with.
+7. Mount `/app/uploads` (where driver's licenses are stored) and `/app/logs` (where logs are stored) to a volume, so that licenses that the end user uploads can be stored on the node's storage the pod is associated with.
 Go to the Deployment, select YAML view, then paste the following underneath the environment variables that are part of the Deployment.
 ```
-     volumeMounts:
-       - name: uploads
-         mountPath: /app/uploads
-volumes:
-  - name: uploads
-    mountPath: /app/uploads
+      volumeMounts:
+        - name: logs
+          mountPath: /app/logs
+        - name: uploads
+          mountPath: /app/uploads
+  volumes:
+    - name: logs
+      emptyDir: {}
+    - name: uploads
+      emptyDir: {}
 ```
-![alt text](images/image-14.png)
+![alt text](<images/image-18.png>)
 
 Click "Save", then "Reload".
 
