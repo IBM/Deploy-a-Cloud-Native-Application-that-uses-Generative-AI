@@ -5,10 +5,11 @@ const fs = require('fs');
 const path = require('path');
 
 // Load Postgres credentials from JSON
-const bindingPath = process.env.POSTGRESQL_BINDING || '../../postgresql-credentials.json';
-const pgCreds = JSON.parse(
-  fs.readFileSync(path.join(__dirname, bindingPath), 'utf8')
-);
+let pgCredsRaw = process.env.POSTGRESQL_BINDING;
+if (pgCredsRaw === 'postgresql-credentials.json') {
+  pgCredsRaw = fs.readFileSync(path.join(__dirname, 'postgresql-credentials.json'), 'utf8');
+}
+const pgCreds = JSON.parse(pgCredsRaw);
 
 // Extract connection info
 const pgConn = pgCreds.connection.postgres;
