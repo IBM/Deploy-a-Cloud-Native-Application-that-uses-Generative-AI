@@ -366,7 +366,7 @@ Go to the Deployment, select YAML view, then paste the following underneath the 
     - name: uploads
       emptyDir: {}
 ```
-![alt text](<images/image-18.png>)
+![alt text](<images/image-19.png>)
 
 Click "Save", then "Reload".
 
