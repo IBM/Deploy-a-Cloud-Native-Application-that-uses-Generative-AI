@@ -4,12 +4,15 @@
 # Traffic Simulation Script for Insurance App
 # ---------------------------------------------
 # Usage:
-# 1. Download this script and the 'uploads' folder with sample images.
-# 2. In your OpenShift project, set the ROUTE_URL environment variable:
+# 1. Download this script and the 'uploads' folder with sample images:
+#    git clone https://github.com/IBM/Deploy-a-Cloud-Native-Application-that-uses-Generative-AI.git
+# 2. Go to your OpenShift project:
+#    oc project cnai
+# 3. In your OpenShift project, set the ROUTE_URL environment variable:
 #    export ROUTE_URL=https://$(oc get route --no-headers | awk '{print $2}')/api/submit-application
-# 3. Make the script executable:
+# 4. Make the script executable:
 #    chmod +x simulate_traffic.sh
-# 4. Run the script:
+# 5. Run the script:
 #    ./simulate_traffic.sh
 #
 # The script will POST 10 sample applications with images to your app so that you can check IBM Cloud Observability tools for traffic.
