@@ -31,7 +31,6 @@ if [ -z "$ROUTE_URL" ]; then
   exit 1
 fi
 
-# Sample data arrays
 FIRST_NAMES=("John" "Ima" "Superbad" "Jelani" "Heidi" "Brenna" "Andrew" "Juana" "Andre" "John")
 LAST_NAMES=("Smith" "Cardholder" "McLovin" "Sample" "Sample" "Murphy" "Sample" "Martinez" "Renee" "Sample")
 ADDRESSES=("1234 Any Street" "2570 24th Street" "892 Momona Street" "123 Sample Drive" "123 North State Street" "111 Anywhere Street City" "123 Main Street" "2233 Calle Heterocuadruples" "3300 Acorn Street" "200 South Main Street")
@@ -40,16 +39,29 @@ STATES=("Georgia" "California" "Hawaii" "Nevada" "New Jersey" "New York" "Pennsy
 ZIPCODES=("33333" "95818" "96820" "12345" "08666" "" "17101" "00987" "12345" "84115")
 IMAGES=("Atlanta_DL.jpg" "California_DL.jpg" "Hawaii_DL.jpg" "Nevada_DL.jpg" "NewJersey_DL.jpg" "NYC_DL.webp" "Pennsylvania_DL.webp" "PuertoRico_DL.jpg" "Texas_DL.webp" "Utah_DL.jpeg")
 
-# Loop through each sample and submit the form
 for i in "${!IMAGES[@]}"; do
-  curl -X POST "$ROUTE_URL" \
-    -F "firstName=${FIRST_NAMES[$i]}" \
-    -F "lastName=${LAST_NAMES[$i]}" \
-    -F "address=${ADDRESSES[$i]}" \
-    -F "city=${CITIES[$i]}" \
-    -F "state=${STATES[$i]}" \
-    -F "zipcode=${ZIPCODES[$i]}" \
-    -F "creditScore=good" \
-    -F "driversLicenseImage=@uploads/${IMAGES[$i]}"
+  IMAGE_PATH="uploads/${IMAGES[$i]}"
+  # If the image is .webp, set MIME type explicitly
+  if [[ "${IMAGES[$i]}" == *.webp ]]; then
+    curl -X POST "$ROUTE_URL" \
+      -F "firstName=${FIRST_NAMES[$i]}" \
+      -F "lastName=${LAST_NAMES[$i]}" \
+      -F "address=${ADDRESSES[$i]}" \
+      -F "city=${CITIES[$i]}" \
+      -F "state=${STATES[$i]}" \
+      -F "zipcode=${ZIPCODES[$i]}" \
+      -F "creditScore=good" \
+      -F "driversLicenseImage=@${IMAGE_PATH};type=image/webp"
+  else
+    curl -X POST "$ROUTE_URL" \
+      -F "firstName=${FIRST_NAMES[$i]}" \
+      -F "lastName=${LAST_NAMES[$i]}" \
+      -F "address=${ADDRESSES[$i]}" \
+      -F "city=${CITIES[$i]}" \
+      -F "state=${STATES[$i]}" \
+      -F "zipcode=${ZIPCODES[$i]}" \
+      -F "creditScore=good" \
+      -F "driversLicenseImage=@${IMAGE_PATH}"
+  fi
   echo "Submitted: ${FIRST_NAMES[$i]} ${LAST_NAMES[$i]}"
 done
