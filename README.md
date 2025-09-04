@@ -396,7 +396,9 @@ This repo also comes with a script to simulate traffic `simulate_traffic.sh`, an
 
 `./simulate_traffic.sh`
 
-5. Go to your IBM Cloud Observability tools to monitor the traffic and resource usage for the pod.
+5. You'll now notice spikes in network and resource usage by going to your IBM Cloud Monitoring service.
+![alt text](<images/image-20.png>)
+![alt text](<images/image-21.png>)
 
 # Credits
 Dave Tropeano
