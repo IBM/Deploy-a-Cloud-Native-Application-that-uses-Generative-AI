@@ -373,9 +373,26 @@ Click "Save", then "Reload".
 Note: This uses ephemeral storage. For persistence, you'll need a PVC mounted to `/app/uploads` to ensure that data is not lost if the pod is deleted. For the purpose of the demo, we will use ephemeral storage. You may need to re-build the Deployment and restart/delete the pod after Reload for changes to take effect.
 
 
-8. Navigate to the "Topology" view in "Developer" and open the URL associated with the Pod.
+## 7. Interacting with the application
+1. Navigate to the "Topology" view in "Developer" and open the URL associated with the Pod. Or perform: `oc get routes -n cnai` and navigate to the URL that is given. You should now be able to interact with the application. Fill out the form with dummy information and upload a dummy driver's license, there are licenses that can be found in `uploads`, but you can find some online to use to test the application.
 
-Or perform: `oc get routes -n cnai` and navigate to the URL that is given. You should now be able to interact with the application.
+# 8. Simulating Traffic for IBM Cloud Observability tools
+
+This repo also comes with a script to simulate traffic `simulate_traffic.sh`, and will fill out the form 10 times. You can re-run the script if you'd like.
+
+1. In IBM Cloud Shell, go to your OpenShift project:
+`oc project cnai`
+
+2. In your OpenShift project, set the ROUTE_URL environment variable:
+`export ROUTE_URL=https://$(oc get route --no-headers | awk '{print $2}')/api/submit-application`
+
+3. Make the script executable:
+`chmod +x simulate_traffic.sh`
+
+4. Run the script:
+`./simulate_traffic.sh`
+
+5. Go to your IBM Cloud Observability tools to monitor the traffic and resource usage for the pod.
 
 # Credits
 Dave Tropeano
