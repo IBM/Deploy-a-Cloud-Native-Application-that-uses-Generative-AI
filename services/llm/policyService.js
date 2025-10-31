@@ -27,7 +27,7 @@ const pool = new Pool({
   database: database,
   ssl: {
     ca: pgCert,
-    rejectUnauthorized: true // or false for dev
+    rejectUnauthorized: false // or false for dev
   }
 });
 
