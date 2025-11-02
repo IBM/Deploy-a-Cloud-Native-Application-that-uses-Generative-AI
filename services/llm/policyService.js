@@ -25,10 +25,7 @@ const pool = new Pool({
   user: username,
   password: password,
   database: database,
-  ssl: {
-    ca: pgCert,
-    rejectUnauthorized: false // or false for dev
-  }
+  ssl: false
 });
 
 pool.connect()
