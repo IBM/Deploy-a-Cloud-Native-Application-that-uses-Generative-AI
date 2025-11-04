@@ -282,7 +282,7 @@ spec:
       auth:
         secretRef:
           secretApiKeySecretRef:
-            name: <YOUR-IBMCLOUD-SECRETS-MANAGER-APIKEY>
+            name: secret-api-key
             key: apikey
 ---
 apiVersion: external-secrets.io/v1beta1
