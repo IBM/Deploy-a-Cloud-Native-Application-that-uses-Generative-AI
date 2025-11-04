@@ -183,22 +183,26 @@ As a third option, you can use IBM Cloud Secrets Manager to centrally store and 
 
 ```export SERVICE_ID=`ibmcloud iam service-id-create openshift-secrets-tutorial --description "A service ID for testing ESO integration" --output json | jq -r ".id"`; echo $SERVICE_ID```
 
+3. Assign the service ID permissions to read secrets from Secrets Manager.
+
+```ibmcloud iam service-policy-create $SERVICE_ID --roles "SecretsReader" --service-name secrets-manager```
+
 Note: The **SecretsReader** service access ensures the External Secrets controller has the correct level of access to read secrets from Secrets Manager and subsequently populate them in your ROKS cluster.
 
-3. Create an IBM Cloud API key for your service ID
+4. Create an IBM Cloud API key for your service ID
 
 ```export IBM_CLOUD_API_KEY=`ibmcloud iam service-api-key-create openshift-secrets-tutorial $SERVICE_ID --description "An API key for testing ESO integration." --output json | jq -r ".apikey"` ```
 
 Note: This will be used later to configure Secrets Manager for your ROKS cluster deployment.
 
-4. Click on "Add +" to create the secrets you want to use with your Secrets Manager instance. 
+5. Click on "Add +" to create the secrets you want to use with your Secrets Manager instance. 
 For watsonx secrets you can use 
 ![alt text](images/image-10.png)
 
-5. For watsonx secrets, you can use "Other secret type" to store arbitrary values.
+6. For watsonx secrets, you can use "Other secret type" to store arbitrary values.
 ![alt text](images/image-11.png)
 
-6. For ICD secrets, you can use "Key-value" to store the connection string in JSON format.
+7. For ICD secrets, you can use "Key-value" to store the connection string in JSON format.
 ![alt text](images/image-12.png)
 
 Or alternatively, you can create a secret using service credentials from the databases in your [IBM Cloud Database resources](https://cloud.ibm.com/databases-overview/resources).
@@ -208,7 +212,7 @@ Navigate to "Service credentials" then "Create credential +", select the Secrets
 
 Note: Make sure all secrets have been added to your Secrets Manager instance before moving on.
 
-7. Back in the IBM Cloud Shell, set up External Secrets Operator in your ROKS cluster. Create a YAML file with the following content to install the External Secrets Manager.
+8. Back in the IBM Cloud Shell, set up External Secrets Operator in your ROKS cluster with the following content to install the External Secrets Manager.
 ```
 echo '
 apiVersion: v1
@@ -239,7 +243,7 @@ spec:
 ' | oc create -f-
 ```
 
-8. Create a YAML file to configure authentication between External Secrets Operator and IBM Cloud Secrets Manager.
+9. Configure authentication between External Secrets Operator and IBM Cloud Secrets Manager.
 ```
 echo "
 apiVersion: operator.external-secrets.io/v1alpha1
@@ -259,10 +263,6 @@ stringData:
   apikey: $IBM_CLOUD_API_KEY
 " | oc create -f-
 ```
-
-9. Apply both of these files to your cluster using:
-
-`oc apply -f <NAME-OF-FILE>`
 
 10. After you install External Secrets Operator in your cluster, you can define Secrets Manager as the secrets backend for your application. Start by creating a configuration file that targets the secret in Secrets Manager that you want to use. 
 
