@@ -257,7 +257,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: secret-api-key
-  namespace: default
+  namespace: <YOUR-OPENSHIFT-NAMESPACE>
 type: Opaque 
 stringData: 
   apikey: $IBM_CLOUD_API_KEY
