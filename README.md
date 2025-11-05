@@ -317,7 +317,7 @@ spec:
         property: connection.cli.arguments
 ```
 
-**Note:** More information about supported secret types and how to write the YAML file can be found here: [Link]([url](https://external-secrets.io/main/provider/ibm-secrets-manager/))
+**Note:** More information about supported secret types and how to write the YAML file can be found here: [Link](https://external-secrets.io/main/provider/ibm-secrets-manager/)
 
 Apply this to your cluster using:
 
