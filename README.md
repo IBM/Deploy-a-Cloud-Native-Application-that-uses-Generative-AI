@@ -317,7 +317,7 @@ spec:
         property: connection.cli.arguments
 ```
 
-**Note:** More information about supported secret types and how to write the YAML file can be found here: [Link](https://external-secrets.io/main/provider/ibm-secrets-manager/)
+**Note:** You can debug errors or unexpected behaviors by performing: `oc get externalsecrets` to find out if it's been applied... and `oc describe externalsecrets ibmcloud-secrets-manager` to look at the logs. More information about supported secret types and how to write the YAML file can be found here: [Link](https://external-secrets.io/main/provider/ibm-secrets-manager/)
 
 Apply this to your cluster using:
 
